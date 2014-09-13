@@ -1,0 +1,51 @@
+# File: Makefile
+# Author: Gustavo Charles P. de Oliveira
+# E-mail: tavolesliv@gmail.com
+# Created on October 13th, 2013
+
+# Remark: written with 2nd. style.
+
+# --//--//-- Flags options for clang++ and g++ :
+#
+#  -Wall:  enables all the warnings about constructions that 
+#  some users consider questionable, and that are easy to avoid 
+#  (or modify to prevent the warning), even in conjunction with macros
+#  
+#  -m32 (-m64): compilation in 32 (64) bits (standard 64)
+#
+#  -g: produces debbuging information (standard)
+#
+#  -pedantic: Issues all the warnings demanded by strict ISO C/C++; reject
+#  all the programs that use forbidden extensions, and some other programs
+#  that do not follow ISO C/C++;
+# 
+#  -std=c++11 -stdlib=libc++: compile according to ISO/C++11. Check!
+#
+
+
+# makefile goal
+target = mainProgramName
+
+# compiler and flags
+compiler = clang++
+flags = -Wall -pedantic
+
+# list of all objects
+objects = main.o file1.o file2.o
+
+# executable rule
+target : $(objects) 
+	$(compiler) -g $(flags) -o $(target) $(objects)
+
+main.o : main.cpp
+	$(compiler) -g $(flags) -c main.cpp
+
+file1.o : file1.cpp file1.h fileAux.h
+	$(compiler) -g $(flags) -c file1.cpp
+
+
+# further commands
+.PHONY : clean 
+clean :
+	rm $(target) $(wildcard *.o)
+

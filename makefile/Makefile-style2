@@ -1,0 +1,28 @@
+# File: Makefile2
+# Author: Gustavo Charles P. de Oliveira
+# E-mail: tavolesliv@gmail.com
+# Created on October 13th, 2013
+
+
+target = mainCoalescence
+
+compiler = clang++
+flags = -g -Wall -pedantic
+
+# list of all objects
+objects = main.o Coalescence2D.o 
+
+# executable rule
+target : $(objects) 
+	$(compiler) $(flags) -o $(target) $(objects)
+
+main.o : main.cpp
+	$(compiler) $(flags) -c main.cpp
+
+Coalescence2D.o : Coalescence2D.cpp Coalescence2D.h MathTools.h
+	$(compiler) $(flags) -c Coalescence2D.cpp
+
+.PHONY : clean 
+clean :
+	rm $(target) $(wildcard *.o)
+

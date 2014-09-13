@@ -1,0 +1,157 @@
+# Makefile
+
+> Recompilation of Makefile
+
+It must be done whenever the source file,
+or any of the header files named as preriquisites, is more recent
+than the object file, or if the object file does not exist.
+
+> Variable
+
+Name defined in a makefile to represent a string of text,
+called the variable's value. (Other versions of make called them
+'macros'). They can represent lists, flags, programs to run, etc.
+
+Any sequence of characters not containing ':', '#', '=', or leading
+or trailing whitespace. Case-sensitive.
+
+Variables that are a single punctuation character or just a few
+characters are 'automatic variables'.
+
+Use '$(foo)' or '${foo}' to substitute the value of 'foo'. ($ sign)
+Write '$$' to have the effect of a single dollar sign.
+
+'$x', without  other '$', '(', or '{' after could refer to variable 'x'.
+
+> Deduction of commands
+
+It is not necessary spell out the commands for compiling the individual
+source files. 'make' has an 'implicit rule'.
+
+We can omit the commands from the rules for the object files.
+
+> PHONY targets
+
+It is one that is not really the name of a file. It's a name for some
+commands to be executed. Two reasons to use:
+
+i) to avoid a conflict with a file of the same name;
+ii) to improve performance;
+
+Example:
+
+clean:
+	rm *.o temp
+
+rm will be called every time when remaking.
+
+.PHONY : clean
+
+will cease to work if anything creates a file named 'clean' in the
+directory. Therewith, 'make clean' will run the commands regardless of
+whether there is a file name 'clean'.
+
+Such rule should not be placed at the beginning of the makefile.
+
+> Makefiles contain 5 types of things:
+
+i) explicit rules: when and how to remake one or more files, called the
+rule's targets;
+ii) implicit rules: when and how to remake a class of files based on
+their names;
+iii) variable definitions: line that specifies a text string value;
+iv) directives: command for make to do something special;
+v) comments: started with the sign '#'. For a literal '#', use '\#';
+
+If the line begins with a TAB, the entire line is passed to the shell.
+Then, it decides how to interpret the text.
+
+> Names of the makefile: make tries 'GNUmakefile', 'makefile', and
+'Makefile', in this order. Recommended the last option.
+
+To use a nonstandard name, use
+
+'make -f name' or 'make --file=name'
+
+to tell 'make' to force 'name' to be read as a makefile.
+
+> Including other makefiles
+
+'include filenames...'
+
+Extra spaces are allowed and ignored at the beginning of the line, but a
+tab is not allowed.
+
+If you have 'a.mk', 'b.mk', 'c.mk', $(bar) , with bar=bish
+
+'include foo *.mk $(bar)' is equivalent to
+'include a.mk b.mk c.mk bish'
+
+Directories can be specified with the '-I' or '--include-dir' option.
+
+> Variable MAKEFILES
+
+If the environment variable 'MAKEFILES' is defined, 'make' considers
+its value as a list of names (separated by whitespaces). It works like
+'include' directive.
+
+> Variable MAKEFILE_LIST
+
+As 'make' reads various makefiles from MAKEFILES, the names are appended
+to MAKEFILE_LIST.
+
+'name1 := $(lastword $(MAKEFILE_LIST))
+include inc.mk
+name2 := $(lastword $(MAKEFILE_LIST))
+all:
+	@echo name1 = $(name1)
+	@echo name2 = $(name2)'
+
+outputs:
+
+'name1 = Makefile'
+'name2 = inc.mk'
+
+> Special variables
+
+.DEFAULT_GOAL: set the default goal to be used if no targets were
+specified on the command line.
+
+.VARIABLES: Expands to a list of the names of all global variables
+defined so far.
+
+> Wildcards
+
+Wildcard characters in make are '*', '?' and '[...]', same as bash.
+'~' is the home directory.
+
+Examples:
+
+-- Remove all the object files:
+clean:
+	rm -f *.o
+
+-- Print all the '.c' files that have changed since the last time you
+printed them:
+
+print: *.c
+		lpr -p $?
+		touch print
+
+Check automatic variables to see '$?'
+Note: 'objects = *.o' is the actual string '*.o'! Instead, use
+
+'objects := $(wildcard *.o)
+
+
+>  Function 'wildcard'
+
+For example:
+
+'$(wildcard *.c)' 
+gets the list of all the .c files.
+
+'$(patsubst %.c,%.o,$(wildcard *.c))'
+This replaces the suffix '.c' by '.o' in all the files.
+
+

@@ -1,0 +1,27 @@
+# File: MakefileSimplest
+# Author: Gustavo Charles P. de Oliveira
+# E-mail: tavolesliv@gmail.com
+# Created on October 13th, 2013
+
+
+# default goal: create mainCoalescence
+target=mainCoalescence 
+
+compiler=clang++
+flag= -g
+
+# executable rule
+$(target) : main.o Coalescence2D.o 
+	$(compiler) -o mainCoalescence main.o Coalescence2D.o 
+
+
+# prerequisites rules
+main.o : main.cpp
+	$(compiler) $(flag) -c main.cpp
+
+Coalescence2D.o : Coalescence2D.cpp Coalescence2D.h MathTools.h
+	$(compiler) $(flag) -c Coalescence2D.cpp
+
+
+clean : 
+		rm mainCoalescence main.o Coalescence2D.o

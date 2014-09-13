@@ -1,0 +1,48 @@
+# File: Makefile
+# Author: Gustavo Charles P. de Oliveira
+# E-mail: tavolesliv@gmail.com
+# Created on October 13th, 2013
+
+
+target = mainCoalescence
+
+compiler = clang++
+#cpp = -std=c++11 -stdlib=libc++ 
+flags = -g -Wall -pedantic
+
+
+objects = main.o Coalescence2D.o
+
+main.o : main.cpp
+
+Coalescence2D.o : Coalescence2D.cpp Coalescence2D.h MathTools.h
+
+
+# Using implicit rule of make. Not spelling out all the commands 
+target : $(objects)
+	$(compiler) $(cpp) $(flags) -o $(target) $(objects)
+	
+
+# With the phony(false) target, 'clean' won't work if there is a file 
+# named 'clean' in the directory
+
+.PHONY : clean
+
+# Different ways to perform clean commands
+
+# way 1
+#clean : 
+#	rm $(target) $(objects)
+
+# way 2
+clean :
+	rm $(target) $(wildcard *.o)
+
+# way 3
+#clean :
+#	rm -f *.o
+
+show_vars :
+	echo $(.VARIABLES)
+
+
